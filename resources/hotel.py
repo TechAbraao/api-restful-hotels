@@ -49,3 +49,9 @@ class Hotel(Resource):
         else:
             json_hoteis["hoteis"].append(novo_hotel)
             return novo_hotel, 201 # Criando novo hotel com sucesso
+
+    def delete(self, hotel_id):
+        global json_hoteis
+        # Filtra os hotéis, removendo o que tem o hotel_id igual ao que foi passado
+        json_hoteis["hoteis"] = [hotel for hotel in json_hoteis["hoteis"] if hotel["hotel_id"] != hotel_id]
+        return {"message": "Hotel deleted"}
