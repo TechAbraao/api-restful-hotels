@@ -3,7 +3,7 @@ from flask_restful import Api
 from resources.hotel import Hoteis, Hotel
 import json
 
-with open("data/data.json", 'r') as arquivo:
+with open("db_files/db_files.json", 'r') as arquivo:
     json_hoteis = json.load(arquivo)
 
 app = Flask(__name__)

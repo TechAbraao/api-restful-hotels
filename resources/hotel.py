@@ -1,7 +1,8 @@
 from flask_restful import Resource, reqparse
+from models.hotelmodel import HotelModel
 import json
 
-with open("./data/data.json", 'r') as arquivo:
+with open("./db_files/db_files.json", 'r') as arquivo:
     json_hoteis = json.load(arquivo)
 
 class Hoteis(Resource):
@@ -28,20 +29,20 @@ class Hotel(Resource):
         argumentos.add_argument("diaria")
         argumentos.add_argument("cidade")
         dados = argumentos.parse_args()
-
-        novo_hotel = {"hotel_id" : hotel_id, **dados}
+        hotel_objeto = HotelModel(hotel_id, **dados)
+        novo_hotel = hotel_objeto.json()
         json_hoteis["hoteis"].append(novo_hotel)
         return novo_hotel, 200
 
     def put(self, hotel_id):
         argumentos = reqparse.RequestParser()
-        argumentos.add_argument("nome")
-        argumentos.add_argument("estrelas")
-        argumentos.add_argument("diaria")
-        argumentos.add_argument("cidade")
+        argumentos.add_argument("nome", type=str, required=True)
+        argumentos.add_argument("estrelas", type=int, required=True)
+        argumentos.add_argument("diaria", type=float, required=True)
+        argumentos.add_argument("cidade", type=str, required=True)
         dados = argumentos.parse_args()
-
-        novo_hotel = {"hotel_id" : hotel_id, **dados}
+        hotel_objeto = HotelModel(hotel_id, **dados)
+        novo_hotel = hotel_objeto.json()
         hotel = self.encontrar_hotel(hotel_id)
         if hotel:
             hotel.update(novo_hotel)
