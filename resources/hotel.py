@@ -1,19 +1,23 @@
 from flask_restful import Resource, reqparse
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base
 from models.hotelmodel import HotelModel
-import json
 
-with open("./db_files/db_files.json", 'r') as arquivo:
-    json_hoteis = json.load(arquivo)
+db = create_engine("sqlite:////home/asantos/courses-udemy-projects/rest-api-flask/db_files/banco.db")
+Session = sessionmaker(bind=db)
+session = Session()
 
 class Hoteis(Resource):
     def get(self):
-        return json_hoteis, 201
+        dados = session.query(HotelModel).all()
+        dados_json = [hotel.json() for hotel in dados]
+        return dados_json, 201
 
 class Hotel(Resource):
     def encontrar_hotel(self, hotel_id):
-        for hotel in json_hoteis["hoteis"]:
-            if hotel["hotel_id"] == hotel_id:
-                return hotel
+        hotel = session.query(HotelModel).filter(HotelModel.hotel_id == hotel_id).first()
+        if hotel:
+            return hotel.json()
         return None
 
     def get(self, hotel_id):
@@ -29,10 +33,10 @@ class Hotel(Resource):
         argumentos.add_argument("diaria")
         argumentos.add_argument("cidade")
         dados = argumentos.parse_args()
-        hotel_objeto = HotelModel(hotel_id, **dados)
-        novo_hotel = hotel_objeto.json()
-        json_hoteis["hoteis"].append(novo_hotel)
-        return novo_hotel, 200
+        novo_hotel = HotelModel(hotel_id=hotel_id, **dados)
+        session.add(novo_hotel)
+        session.commit()
+        return novo_hotel.json(), 200
 
     def put(self, hotel_id):
         argumentos = reqparse.RequestParser()
@@ -41,17 +45,26 @@ class Hotel(Resource):
         argumentos.add_argument("diaria", type=float, required=True)
         argumentos.add_argument("cidade", type=str, required=True)
         dados = argumentos.parse_args()
-        hotel_objeto = HotelModel(hotel_id, **dados)
-        novo_hotel = hotel_objeto.json()
-        hotel = self.encontrar_hotel(hotel_id)
+        hotel = session.query(HotelModel).filter(HotelModel.hotel_id == hotel_id).first()
+
         if hotel:
-            hotel.update(novo_hotel)
-            return novo_hotel, 200
+            hotel.nome = dados['nome']
+            hotel.estrelas = dados['estrelas']
+            hotel.diaria = dados['diaria']
+            hotel.cidade = dados['cidade']
+            session.commit()
+            return hotel.json(), 200
         else:
-            json_hoteis["hoteis"].append(novo_hotel)
-            return novo_hotel, 201 # Criando novo hotel com sucesso
+            novo_hotel = HotelModel(hotel_id=hotel_id, **dados)
+            session.add(novo_hotel)
+            session.commit()
+            return novo_hotel.json(), 201
 
     def delete(self, hotel_id):
-        global json_hoteis
-        json_hoteis["hoteis"] = [hotel for hotel in json_hoteis["hoteis"] if hotel["hotel_id"] != hotel_id]
-        return {"message": "Hotel deleted"}
+        hotel = session.query(HotelModel).filter(HotelModel.hotel_id == hotel_id).first()
+        if hotel:
+            session.delete(hotel)
+            session.commit()
+            return {"message": "Hotel deleted"}, 200
+        return {"message": "Hotel not found"}, 404
+
