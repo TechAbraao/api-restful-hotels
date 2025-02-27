@@ -3,7 +3,12 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from models.hotelmodel import HotelModel
 
-db = create_engine("sqlite:////home/asantos/courses-udemy-projects/rest-api-flask/db_files/banco.db")
+from dotenv import load_dotenv
+import os
+load_dotenv()
+diretorio = os.getenv("DATABASE_URL")
+
+db = create_engine(diretorio)
 Session = sessionmaker(bind=db)
 session = Session()
 
@@ -34,6 +39,11 @@ class Hotel(Resource):
         argumentos.add_argument("cidade")
         dados = argumentos.parse_args()
         novo_hotel = HotelModel(hotel_id=hotel_id, **dados)
+
+        hotel_existente = HotelModel.query.filter_by(hotel_id=hotel_id).first()
+        if hotel_existente:
+            return {"message": "Hotel id inválido. Já consta no Banco de Dados"}, 400
+
         session.add(novo_hotel)
         session.commit()
         return novo_hotel.json(), 200
@@ -46,7 +56,6 @@ class Hotel(Resource):
         argumentos.add_argument("cidade", type=str, required=True)
         dados = argumentos.parse_args()
         hotel = session.query(HotelModel).filter(HotelModel.hotel_id == hotel_id).first()
-
         if hotel:
             hotel.nome = dados['nome']
             hotel.estrelas = dados['estrelas']
