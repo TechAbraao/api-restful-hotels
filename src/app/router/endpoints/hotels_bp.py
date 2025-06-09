@@ -12,15 +12,12 @@ register_hotel_error_handlers(hotels_bp)
 @hotels_bp.route("/", methods=["GET"])
 def get_hotels():
     data = HotelService.get_hotels()
-
-    result = hotels_schema.dump(data)
     return jsonify({
         "status": "success",
         "count": len(data),
         "message": "List of all hotels.",
-        "data": result
+        "data": data
     }), 200
-
 
 @hotels_bp.route("/<int:id>", methods=["GET"])
 def get_hostels_by_id(id: int):
@@ -29,13 +26,11 @@ def get_hostels_by_id(id: int):
     if not data:
         raise HotelNotFound(f"Hotel with ID {id} not found.")
 
-    result = hotel_schema.dump(data)
     return jsonify({
         "status": "success",
         "message": f"Details for Hotel ID {id}.",
-        "data": result
+        "data": data
     }), 200
-
 
 @hotels_bp.route("/", methods=["POST"])
 def post_hotel():
@@ -43,15 +38,13 @@ def post_hotel():
     if not data:
         raise HotelInsertionError("Failed to insert hotel.")
 
-    new_hotel = HotelService.post_hotel(data)
+    data = HotelService.post_hotel(data)
 
-    result = hotel_schema.dump(new_hotel)
     return jsonify({
         "status": "success",
         "message": "Hotel created successfully",
-        "data": result
+        "data": data
     }), 201
-
 
 @hotels_bp.route("/<int:id>", methods=["DELETE"])
 def delete_hotel_by_id(id: int): pass
