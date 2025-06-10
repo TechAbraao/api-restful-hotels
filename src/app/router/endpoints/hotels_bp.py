@@ -36,7 +36,7 @@ def get_hotels():
         }), 200
 
 @hotels_bp.route("/<string:id>", methods=["GET"])
-def get_hostel_by_id(id: int):
+def get_hostel_by_id(id: str):
     try:
         id = int(id)
     except ValueError:
@@ -59,23 +59,40 @@ def get_hostel_by_id(id: int):
 @hotels_bp.route("/", methods=["POST"])
 def post_hotel():
     data = request.json
+
     if not data:
         raise HotelInsertionError("Failed to insert hotel.")
 
     try:
-        data = HotelService.post_hotel(data)
+        data = HotelService.insert_hotel(data)
     except IntegrityError as err:
         raise HotelDuplicateDataError(str(err.orig))
 
     return jsonify({
-        "status": "success",
-        "message": "Hotel created successfully",
+        "status": "success.",
+        "message": "Hotel created successfully.",
         "data": data
     }), 201
 
+@hotels_bp.route("/<string:id>", methods=["DELETE"])
+def delete_hotel_by_id(id: str):
+    try:
+        id = int(id)
+    except ValueError:
+        raise IndexNotIntegerError()
 
-@hotels_bp.route("/<int:id>", methods=["DELETE"])
-def delete_hotel_by_id(id: int): pass
+    if id <= 0:
+        raise HotelIndexZeroError()
+
+    finding_hotel = HotelService.delete_hotel_by_id(id)
+
+    if finding_hotel:
+        return jsonify({
+            "status": "success.",
+            "message": "Hotel deleted successfully.",
+        }), 200
+    else:
+        raise HotelNotFound("Hotel does not exist in the database.")
 
 @hotels_bp.route("/err", methods=["GET"])
 def hotels_model_err():

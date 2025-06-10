@@ -1,6 +1,7 @@
 from flask import Flask
 from dotenv import load_dotenv
 
+
 from src.app.router.endpoints.hotels_bp import hotels_bp
 
 load_dotenv()

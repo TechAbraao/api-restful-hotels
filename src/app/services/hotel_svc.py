@@ -37,8 +37,18 @@ class HotelService:
 
     @staticmethod
     @with_session
-    def post_hotel(db_session, hotel_data):
+    def insert_hotel(db_session, hotel_data):
         new_hotel = Hotel(**hotel_data)
         db_session.add(new_hotel)
         db_session.flush()
         return hotel_schema.dump(new_hotel)
+
+    @staticmethod
+    @with_session
+    def delete_hotel_by_id(db_session, hotel_id):
+        finding_hotel = db_session.get(Hotel, hotel_id)
+        if finding_hotel:
+            db_session.delete(finding_hotel)
+            return True
+        else:
+            return False
