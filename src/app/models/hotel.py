@@ -10,7 +10,7 @@ class Hotel(Base):
     city = Column(String)
     address = Column(String)
     stars = Column(Integer)
-    phone = Column(String)
-    email = Column(String)
-    website = Column(String)
+    phone = Column(String, unique=True)
+    email = Column(String, unique=True)
+    website = Column(String, unique=True)
 

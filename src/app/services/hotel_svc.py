@@ -6,9 +6,28 @@ from src.app.schemas.hotels import hotel_schema, hotels_schema
 class HotelService:
     @staticmethod
     @with_session
-    def get_hotels(db_session):
-        hotels = db_session.query(Hotel).all()
-        return hotels_schema.dump(hotels)
+    def get_paginated_hotels(db_session, page, per_page):
+        offset = (page - 1) * per_page
+
+        query = db_session.query(Hotel)
+        total = query.count()
+        hotels = query.offset(offset).limit(per_page).all()
+
+        return {
+            'total': total,
+            'pages': (total + per_page - 1) // per_page,
+            'page': page,
+            'per_page': per_page,
+            'data': hotels_schema.dump(hotels)
+        }
+
+    @staticmethod
+    @with_session
+    def get_all_hotels(db_session):
+        all_hotels = db_session.query(Hotel).all()
+        return {
+            "data": hotels_schema.dump(all_hotels)
+        }
 
     @staticmethod
     @with_session
