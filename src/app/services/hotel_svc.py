@@ -1,7 +1,7 @@
-from src.app.models.hotel import Hotel
+from src.app.models.hotel_mdl import Hotel
 from src.app.utils.decorators import with_session
 
-from src.app.schemas.hotels import hotel_schema, hotels_schema
+from src.app.schemas.hotels_sch import hotel_schema, hotels_schema
 
 class HotelService:
     @staticmethod

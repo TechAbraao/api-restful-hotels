@@ -6,7 +6,8 @@ try:
 
     from src.app.settings.db_base import Base
     from src.app.settings.db_engine import engine
-    from src.app.models.hotel import Hotel
+    from src.app.models.hotel_mdl import Hotel
+    from src.app.models.auth_mdl import Users
 
     Base.metadata.create_all(bind=engine)
     print(" * Database created successfully.")

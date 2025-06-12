@@ -5,7 +5,7 @@ from src.app.exceptions.hotels_exc import *
 from src.app.handlers.hotels_err import register_hotel_error_handlers
 from src.app.services.hotel_svc import HotelService
 
-hotels_bp = Blueprint('hotels', __name__, url_prefix="/api/hotels")
+hotels_bp = Blueprint('hotels', __name__, url_prefix="/api/v1/hotels")
 
 register_hotel_error_handlers(hotels_bp)
 
