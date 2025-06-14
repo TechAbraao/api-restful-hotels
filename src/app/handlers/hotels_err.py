@@ -1,4 +1,5 @@
 from flask import jsonify
+
 from src.app.exceptions.hotels_exc import (
     HotelNotFound, HotelsInternalError, HotelInsertionError,
     HotelIndexZeroError, IndexNotIntegerError, HotelDuplicateDataError

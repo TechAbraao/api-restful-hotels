@@ -1,16 +1,21 @@
 from flask import Flask
 from dotenv import load_dotenv
 
-
-from src.app.router.endpoints.hotels_bp import hotels_bp
-from src.app.router.endpoints.auth_bp import auth_bp
+from src.app.router.routes import all_routes
+from src.app.settings.app_settings import AppSettings
 
 load_dotenv()
-def create_app():
-    app = Flask(__name__)
-    app.config['DEBUG'] = True
+def create_app(settings: AppSettings):
+    app = Flask(
+        __name__,
+        template_folder="templates/",
+        static_folder="static/"
+    )
 
-    app.register_blueprint(hotels_bp)
-    app.register_blueprint(auth_bp)
+    app.config['DEBUG'] = settings.debug
+    app.config["SECRET_KEY"] = settings.secret_key
+
+    for bp in all_routes:
+        app.register_blueprint(bp)
 
     return app
