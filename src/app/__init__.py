@@ -1,15 +1,13 @@
 from flask import Flask
 from dotenv import load_dotenv
 
-from src.app.router.routes import all_routes
+from src.app.blueprints.routes import all_routes
 from src.app.settings.app_settings import AppSettings
 
 load_dotenv()
 def create_app(settings: AppSettings):
     app = Flask(
-        __name__,
-        template_folder="templates/",
-        static_folder="static/"
+        __name__
     )
 
     app.config['DEBUG'] = settings.debug

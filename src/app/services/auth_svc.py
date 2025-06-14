@@ -1,6 +1,6 @@
 from src.app.utils.decorators import with_session
 from src.app.models.auth_mdl import Users
-from src.app.schemas.auth_sch import login_schema
+from src.app.schemas.auth_sch import login_user_schema
 
 class AuthService:
     @staticmethod
@@ -19,7 +19,7 @@ class AuthService:
         """ It will search the e-mail according to the parameters. """
         finding_email = db_session.query(Users).filter_by(email=user_email).first()
         if finding_email:
-            validate_email = login_schema.dump(finding_email)
+            validate_email = login_user_schema.dump(finding_email)
             return True, validate_email["email"]
         return False, None
 
@@ -29,6 +29,6 @@ class AuthService:
         """ Searches for the user's password hash by email. """
         finding_hash = db_session.query(Users).filter_by(email=user_email).first()
         if finding_hash:
-            validate_data = login_schema.dump(finding_hash)
+            validate_data = login_user_schema.dump(finding_hash)
             return validate_data["password"]
         return None

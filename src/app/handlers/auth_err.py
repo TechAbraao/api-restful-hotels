@@ -5,7 +5,7 @@ from src.app.exceptions.auth_exc import (
     EmailNonExistentError, PasswordVerificationError
 )
 
-def register_auth_error_handlers(bp):
+def register_auth_users_error_handlers(bp):
     @bp.errorhandler(RegisterDataValidationError)
     def handle_register_insertion_error(err):
         return jsonify(err.to_dict()), err.status_code

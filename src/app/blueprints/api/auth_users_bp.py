@@ -2,23 +2,21 @@ from flask import Blueprint, request, jsonify
 from marshmallow import ValidationError
 from sqlalchemy.exc import IntegrityError
 
-from src.app.schemas.auth_sch import register_schema, login_schema
-from src.app.handlers.auth_err import register_auth_error_handlers
+from src.app.schemas.auth_sch import register_user_schema, login_user_schema
+from src.app.handlers.auth_err import register_auth_users_error_handlers
 from src.app.exceptions.auth_exc import *
 from src.app.services.auth_svc import AuthService
 from src.app.utils.encryption import Encryption
 from src.app.utils.jwt import JWT
 
-auth_bp = Blueprint(
-    'auth', __name__, url_prefix="/api/v1/auth"
-)
+auth_users_bp = Blueprint('auth', __name__, url_prefix="/api/v1/auth")
 
-register_auth_error_handlers(auth_bp)
+register_auth_users_error_handlers(auth_users_bp)
 
-@auth_bp.route("/register", methods=["POST"])
+@auth_users_bp.route("/register", methods=["POST"])
 def register_user():
     try:
-        validated_data = register_schema.load(request.json)
+        validated_data = register_user_schema.load(request.json)
         validated_data["password"] = Encryption.encrypt_password(validated_data["password"])
     except ValidationError as err:
         raise RegisterDataValidationError(err.messages)
@@ -38,10 +36,10 @@ def register_user():
             "Undefined Error."
         )
 
-@auth_bp.route("/login", methods=["POST"])
+@auth_users_bp.route("/login", methods=["POST"])
 def login_user():
     try:
-        validated_data = login_schema.load(request.json)
+        validated_data = login_user_schema.load(request.json)
         email_validated = validated_data["email"]
         password_validated = validated_data["password"]
     except ValidationError as err:

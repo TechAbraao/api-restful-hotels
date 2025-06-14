@@ -1,3 +1,8 @@
-{% extends "bases/base_default.jinja2" %}
+{% extends "base.jinja2" %}
 
-{% block title %} Página Inicial {% endblock title %}
+{% block title %} Início | WebHotels {% endblock title %}
+
+{% block sidenav %}
+    {% set type_sidenav = type_sidenav %}
+    {% include "partials/sidenav.jinja2" %}
+{% endblock sidenav %}

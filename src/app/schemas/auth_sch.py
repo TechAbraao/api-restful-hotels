@@ -1,6 +1,6 @@
 from marshmallow import Schema, fields, validate
 
-class RegisterSchema(Schema):
+class RegisterUserSchema(Schema):
     """
     Schema for registering users
     """
@@ -12,14 +12,17 @@ class RegisterSchema(Schema):
     phone = fields.Str(required=True)
     birth_date = fields.Date(required=True)
     role = fields.Str(required=True, validate=validate.OneOf(["user", "enterprise"]))
-register_schema = RegisterSchema()
+register_user_schema = RegisterUserSchema()
+
+class RegisterEnterpriseSchema(Schema): pass
 
 
-
-class LoginSchema(Schema):
+class LoginUserSchema(Schema):
     """
     Schema to login (email & password)
     """
     email = fields.Email(required=True)
     password = fields.Str(required=True, validate=validate.Length(min=6))
-login_schema = LoginSchema()
+login_user_schema = LoginUserSchema()
+
+class LoginEnterpriseSchema(Schema): pass

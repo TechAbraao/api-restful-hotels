@@ -3,6 +3,9 @@ from marshmallow import Schema, fields
 class HotelSchema(
     Schema
 ):
+    """
+    Schema for registering Hotels
+    """
     id = fields.Int()
     name = fields.Str()
     city = fields.Str()

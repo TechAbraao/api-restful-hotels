@@ -1,0 +1,21 @@
+<nav class="w-full h-24 bg-red-200 flex justify-end items-center">
+    {% if type_sidenav == "standard" %}
+        <p>Standard Nav</p>
+        <ul class="flex justify-center items-center gap-3 w-1/4 bg-red-300 h-full">
+            {{  buttons.basic_button(text="Entrar", url=url_for("views.view_login"), class_name=button_styles.btn_tertiary) }}
+            {{  buttons.basic_button(text="Cadastrar Empresa", url=url_for("views.view_register"), class_name=button_styles.btn_tertiary) }}
+        </ul>
+    {% elif type_sidenav == "enterprise" %}
+        <p>Enterprise Nav</p>
+        <ul>
+
+        </ul>
+    {% elif type_sidenav == "user" %}
+        <p>User Nav</p>
+        <ul>
+
+        </ul>
+    {% else %}
+        <p> Render Error </p>
+    {% endif %}
+</nav>
