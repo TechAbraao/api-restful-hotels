@@ -1,0 +1,29 @@
+{% macro basic_input(
+    label="Undefined",
+    class_name="",
+    type="password",
+    name="password",
+    placeholder="Undefined",
+    icon_svg=None
+) %}
+  <div class="w-full mb-5">
+    <label for="{{ name }}" class="block text-sm font-medium text-gray-700 mb-1">
+      {{ label }}
+    </label>
+    <div class="relative">
+      {% if icon_svg %}
+        <!-- Slot para ícone customizado -->
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          {{ icon_svg | safe }}
+        </div>
+      {% endif %}
+      <input
+        type="{{ type }}"
+        name="{{ name }}"
+        id="{{ name }}"
+        placeholder="{{ placeholder }}"
+        class="{{ class_name }} {% if icon_svg %}pl-10{% endif %} pr-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-sm w-full"
+      />
+    </div>
+  </div>
+{% endmacro %}

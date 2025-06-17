@@ -4,6 +4,16 @@
             onclick="window.location.href='{{ url }}'"
         {% endif %}
     >
-        {{ text if text else "Clique aqui" }}
+        {{ text if text else "Click Here" }}
+    </button>
+{% endmacro %}
+
+{% macro back_button(text=None, type="button", class_name="", url=None) %}
+    <button type="{{ type }}" class="{{ class_name }}"
+        {% if url %}
+            onclick="window.location.href='{{ url }}'"
+        {% endif %}
+    >
+        {{ text if text else "Back" }}
     </button>
 {% endmacro %}

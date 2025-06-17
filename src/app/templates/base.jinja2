@@ -7,9 +7,13 @@
     <title>
         {% block title %} Default {% endblock title %}
     </title>
+    {% import "styles/icons_styles.jinja2" as icons_styles %}
 
     {% import "macros/button.jinja2" as buttons %}
     {% import "styles/button_styles.jinja2" as button_styles %}
+
+    {% import "macros/input.jinja2" as inputs %}
+    {% import "styles/inputs_styles.jinja2" as inputs_styles %}
 
 </head>
 <body>
